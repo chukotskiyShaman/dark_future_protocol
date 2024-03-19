@@ -6,9 +6,9 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("My App")
-        self.setGeometry(0,0,1000,1000)
+        self.setGeometry(0,0,1920,1000)
         self.label = QLabel(self)
-        self.label.setGeometry(0,0,800,800)
+        self.label.setGeometry(0,0,1900,800)
         self.label.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
         self.intro = QPushButton("Intro", self)
         self.intro.setGeometry(300, 300, 180, 40)
