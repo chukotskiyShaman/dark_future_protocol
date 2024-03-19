@@ -2,6 +2,8 @@ import time
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
 from PyQt6 import QtCore
 
+# -*- coding: utf-8 -*-
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -18,7 +20,7 @@ class MainWindow(QMainWindow):
         self.quit.clicked.connect(self.quit_button_was_clicked)
 
     def intro_button_was_clicked(self):
-        with open('./intro.txt', 'r') as file:
+        with open('./intro.txt', 'r', encoding="utf-8") as file:
             self.text=file.read()
             self.i=0
             self.timer = QtCore.QTimer()
