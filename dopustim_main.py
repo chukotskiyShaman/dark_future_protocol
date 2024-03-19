@@ -16,12 +16,6 @@ class MainWindow(QMainWindow):
         self.quit = QPushButton("Exit", self)
         self.quit.setGeometry(300,340,180,40)
         self.quit.clicked.connect(self.quit_button_was_clicked)
-        # self.timer = QTimer()
-        # self.timer.timeout.connect(self.updateText)
-        # self.timer.start(100)
-
-        # Устанавливаем центральный виджет Window.
-        # self.setCentralWidget(self.button)
 
     def intro_button_was_clicked(self):
         with open('./intro.txt', 'r') as file:
