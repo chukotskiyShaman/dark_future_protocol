@@ -6,9 +6,9 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("My App")
-        self.setGeometry(0,0,1000,1000)
+        self.setGeometry(0,0,1920,1000)
         self.label = QLabel(self)
-        self.label.setGeometry(0,0,800,800)
+        self.label.setGeometry(0,0,1900,800)
         self.label.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
         self.intro = QPushButton("Intro", self)
         self.intro.setGeometry(300, 300, 180, 40)
@@ -18,7 +18,7 @@ class MainWindow(QMainWindow):
         self.quit.clicked.connect(self.quit_button_was_clicked)
 
     def intro_button_was_clicked(self):
-        with open('./intro.txt', 'r') as file:
+        with open('./intro.txt', 'r', encoding="utf-8") as file:
             self.text=file.read()
             self.i=0
             self.timer = QtCore.QTimer()
