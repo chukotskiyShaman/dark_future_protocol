@@ -2,8 +2,6 @@ import time
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
 from PyQt6 import QtCore
 
-# -*- coding: utf-8 -*-
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
