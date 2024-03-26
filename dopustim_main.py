@@ -21,16 +21,21 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.character=char
         self.setWindowTitle("My App")
+        self.choises = [QPushButton(self),QPushButton(self),QPushButton(self),QPushButton(self)]
+        for choise in self.choises:
+            choise.hide()
         self.setGeometry(0,0,1920,1000)
         self.label = QLabel(self)
         self.label.setGeometry(0,0,1900,800)
         self.label.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
-        self.new_game = QPushButton("Start game", self)
-        self.new_game.setGeometry(300, 300, 180, 40)
-        self.new_game.clicked.connect(self.new_game_button_was_clicked)#
-        self.quit = QPushButton("Exit", self)
-        self.quit.setGeometry(300,340,180,40)
-        self.quit.clicked.connect(self.quit_button_was_clicked)
+        self.menu_buttons = [QPushButton(self),QPushButton(self),QPushButton(self)]
+        self.menu_buttons[1].hide()
+        self.menu_buttons[0].setText("Start game")
+        self.menu_buttons[0].setGeometry(300, 300, 180, 40)
+        self.menu_buttons[0].clicked.connect(self.new_game_button_was_clicked)
+        self.menu_buttons[2].setText("Exit")
+        self.menu_buttons[2].setGeometry(300, 340, 180, 40)
+        self.menu_buttons[2].clicked.connect(self.quit_button_was_clicked)
 
     def new_game_button_was_clicked(self):
         with open('./intro.txt', 'r', encoding="utf-8") as file:
@@ -39,8 +44,9 @@ class MainWindow(QMainWindow):
             self.timer = QtCore.QTimer()
             self.timer.timeout.connect(self.updateText)
             self.timer.start(25)
-            self.new_game.hide()
-            #self.quit.deleteLater()
+            self.menu_buttons[2].hide()
+            self.menu_buttons[0].hide()
+            self.menu_buttons[0].disconnect()
 
     def quit_button_was_clicked(self):
         game.app.quit()
@@ -52,13 +58,13 @@ class MainWindow(QMainWindow):
             self.label.setText(self.label.text() + self.text[0])
             self.text = self.text[1:]
         else:
-            self.cont = QPushButton("Continue",self)
-            self.cont.setGeometry(300,300,180,40)
-            self.cont.clicked.connect(self.player_char)
+            self.menu_buttons[0].setText("Continue")
+            self.menu_buttons[0].show()
+            self.menu_buttons[0].clicked.connect(self.player_char)
             self.timer.stop()
 
     def player_char(self):
-        self.label.deleteLater()
+        self.label.hide()
         
 
 class game:
