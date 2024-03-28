@@ -28,6 +28,7 @@ class MainWindow(QMainWindow):
         for choise in self.choises:
             choise.hide()
         self.setGeometry(0,0,1920,1000)
+        self.end_print = 0
 
         self.label = QLabel(self)
         self.names_labels = [QLabel(self) for _ in range(len(self.character.stats))]
@@ -58,28 +59,32 @@ class MainWindow(QMainWindow):
     def new_game_button_was_clicked(self):
         with open('./data/intro.txt', 'r', encoding="utf-8") as file:
             self.text = file.read()# self.text="a"
-            self.i=0
-            self.timer = QtCore.QTimer()
-            self.timer.timeout.connect(self.updateText)
-            self.timer.start(25)
-            # self.menu_buttons[2].hide()
-            # self.menu_buttons[0].hide()
-            self.menu_buttons[0].disconnect()
-            self.menu_buttons[0].setText("Continue")
-            self.menu_buttons[0].clicked.connect(self.player_char)
+        self.print_text(self.label)
+        # self.menu_buttons[2].hide()
+        # self.menu_buttons[0].hide()
+        self.menu_buttons[0].disconnect()
+        self.menu_buttons[0].setText("Continue")
+        self.menu_buttons[0].clicked.connect(self.player_char)
 
     def quit_button_was_clicked(self):
         game.app.quit()
 
 
     
-    def updateText(self):
+    def updateText(self, label):
         if self.text:
-            self.label.setText(self.label.text() + self.text[0])
+            label.setText(label.text() + self.text[0])
             self.text = self.text[1:]
         else:
             self.timer.stop()
+            self.end_print = 1
 
+            
+    def print_text(self, label):
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(lambda : self.updateText(label))
+        self.timer.start(25)
+        
     def player_char(self):
         self.label.hide()
         self.timer.stop()
@@ -123,9 +128,15 @@ class MainWindow(QMainWindow):
         
         with open('./data/first_decision.txt', 'r', encoding = "utf-8") as file:
             self.text=file.read()
-            self.timer = QtCore.QTimer()
-            self.timer.timeout.connect(self.updateText)
-            self.timer.start(25)
+            self.print_text(self.label)
+        print(self.text)
+        if self.end_print == 1:
+            with open('./data/first_decision_variants.txt','r',encoding = "utf-8") as file:
+                for i,string in enumerate(file): 
+                    self.choises[i].setText(string)
+                    self.choises[i].setGeometry(100,200+i*40,240,40)
+                    self.choises[i].show()
+                
             
             
 
