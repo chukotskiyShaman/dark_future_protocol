@@ -10,7 +10,7 @@ class Char:
         self.points = 10 
         self.stats = {"Сила":3,"Технология":3,"Ловкость":3,"Харизма":3,"Интелект":3}
     def choose_params(self, i, cnt):
-        if (((self.stats[list(self.stats.keys())[i]]!=3 and cnt==-1) or (self.stats[list(self.stats.keys())[i]]!=10 and cnt==1)) and (self.points!=0 or cnt==-1)):
+        if (((self.stats[list(self.stats.keys())[i]]!=2 and cnt==-1) or (self.stats[list(self.stats.keys())[i]]!=10 and cnt==1)) and (self.points!=0 or cnt==-1)):
             self.stats[list(self.stats.keys())[i]] += cnt
             self.parent.value_labels[i].setText(f"{list(self.stats.values())[i]}")
             self.points-=cnt
@@ -56,15 +56,17 @@ class MainWindow(QMainWindow):
         self.menu_buttons[2].clicked.connect(self.quit_button_was_clicked)
 
     def new_game_button_was_clicked(self):
-        with open('./intro.txt', 'r', encoding="utf-8") as file:
-            self.text="a" #file.read()
+        with open('./data/intro.txt', 'r', encoding="utf-8") as file:
+            self.text = file.read()# self.text="a"
             self.i=0
             self.timer = QtCore.QTimer()
             self.timer.timeout.connect(self.updateText)
             self.timer.start(25)
             # self.menu_buttons[2].hide()
-            self.menu_buttons[0].hide()
+            # self.menu_buttons[0].hide()
             self.menu_buttons[0].disconnect()
+            self.menu_buttons[0].setText("Continue")
+            self.menu_buttons[0].clicked.connect(self.player_char)
 
     def quit_button_was_clicked(self):
         game.app.quit()
@@ -76,25 +78,21 @@ class MainWindow(QMainWindow):
             self.label.setText(self.label.text() + self.text[0])
             self.text = self.text[1:]
         else:
-            self.menu_buttons[0].setText("Continue")
-            self.menu_buttons[0].show()
-            self.menu_buttons[0].clicked.connect(self.player_char)
             self.timer.stop()
 
     def player_char(self):
         self.label.hide()
+        self.timer.stop()
         self.menu_buttons[0].hide()
         
         for i,stat in enumerate(self.character.stats):
             self.names_labels[i].setText(stat)
             self.value_labels[i].setText(f"{self.character.stats[stat]}")
 
-
             
             self.statsbuttons[i*2].clicked.connect(lambda _,x = i : self.character.choose_params(x,-1))
             self.statsbuttons[i*2+1].clicked.connect(lambda _,x = i : self.character.choose_params(x,+1))
 
-            
 
             self.names_labels[i].setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
             self.value_labels[i].setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
@@ -108,6 +106,28 @@ class MainWindow(QMainWindow):
             self.value_labels[i].show()
             self.statsbuttons[i*2].show()
             self.statsbuttons[i*2+1].show()
+            
+        self.menu_buttons[0].disconnect()
+        self.menu_buttons[0].clicked.connect(self.ch1_near_apart)
+
+    def ch1_near_apart(self):
+        for i,stat in enumerate(self.character.stats):
+            self.names_labels[i].hide()
+            self.value_labels[i].hide()
+            self.statsbuttons[i*2].hide()
+            self.statsbuttons[i*2+1].hide()
+            
+        self.menu_buttons[0].hide()
+        self.label.setText("")
+        self.label.show()
+        
+        with open('./data/first_decision.txt', 'r', encoding = "utf-8") as file:
+            self.text=file.read()
+            self.timer = QtCore.QTimer()
+            self.timer.timeout.connect(self.updateText)
+            self.timer.start(25)
+            
+            
 
         
 
@@ -125,6 +145,9 @@ class progress:
     def __init__(self):
         super().init()
         self.intro_passed = False
+        self.ch1_carpet_key = False
+        self.ch1_lockpick = False
+        self.ch1_UGA_BUGA = False
         
 
 if __name__ == "__main__":
