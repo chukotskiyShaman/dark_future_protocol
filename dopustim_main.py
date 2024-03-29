@@ -3,6 +3,19 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
 from PyQt6 import QtCore
 
 
+
+
+
+class Progress:
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+        self.intro_passed = False
+        self.ch1_carpet_key = False
+        self.ch1_lockpick = False
+        self.ch1_UGA_BUGA = False
+        
+
 class Char:
     def __init__(self,parent):
         super().__init__()
@@ -23,12 +36,12 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.character=Char(self)
+        self.progress = Progress(self)
         self.setWindowTitle("My App")
-        self.choises = [QPushButton(self),QPushButton(self),QPushButton(self),QPushButton(self)]
+        self.choises = [QPushButton(self) for _ in range(4)]
         for choise in self.choises:
             choise.hide()
         self.setGeometry(0,0,1920,1000)
-        self.end_print = 0
 
         self.label = QLabel(self)
         self.names_labels = [QLabel(self) for _ in range(len(self.character.stats))]
@@ -45,7 +58,7 @@ class MainWindow(QMainWindow):
             stats.hide()
             vals.hide()
 
-        self.label.setGeometry(0,0,1900,800)
+        self.label.setGeometry(0,0,1900,400)
         self.label.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
         self.menu_buttons = [QPushButton(self),QPushButton(self),QPushButton(self)]
         self.menu_buttons[1].hide()
@@ -71,19 +84,25 @@ class MainWindow(QMainWindow):
 
 
     
-    def updateText(self, label):
+    def updateText(self, label, buttons = 0, func=0):
         if self.text:
             label.setText(label.text() + self.text[0])
             self.text = self.text[1:]
         else:
+            for i,button in enumerate(buttons):
+                button.clicked.connect(lambda _, x = i : func(x))
+                button.show()
             self.timer.stop()
-            self.end_print = 1
-
             
-    def print_text(self, label):
+    def hide_buttons(self, buttons):
+        for button in buttons:
+            button.hide()
+            button.disconnect()
+            
+    def print_text(self, label, buttons = [], func = lambda x:x):
         self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(lambda : self.updateText(label))
-        self.timer.start(25)
+        self.timer.timeout.connect(lambda : self.updateText(label, buttons, func))
+        self.timer.start(0)
         
     def player_char(self):
         self.label.hide()
@@ -115,6 +134,35 @@ class MainWindow(QMainWindow):
         self.menu_buttons[0].disconnect()
         self.menu_buttons[0].clicked.connect(self.ch1_near_apart)
 
+    
+    def first_decision_variant(self,i):
+        self.label.setText('')
+        self.hide_buttons(self.choises[0:3])
+        if (i==0):
+            self.progress.ch1_carpet_key = True
+            with open('./data/chapter1/key_under_carpet.txt', 'r', encoding = 'utf-8') as file:
+                self.text=file.read()
+            
+        if (i==1):
+            self.progress.ch1_lockpick = True
+            with open('./data/chapter1/use_lockpick.txt', 'r', encoding = 'utf-8') as file:
+                self.text=file.read()
+                    
+        if (i==2):
+            self.progress.ch1_UGA_BUGA = True
+            with open('./data/chapter1/break_door.txt', 'r', encoding = 'utf-8') as file:
+                self.text=file.read()
+
+                
+        self.print_text(self.label, self.choises)
+        
+        with open('./data/chapter1/key_under_carpet_variants.txt', 'r', encoding = 'utf-8') as file:
+            for i,string in enumerate(file):
+                if not (string == '\n'):
+                    self.choises[i].setText(string)
+                    self.choises[i].setGeometry(100,400+i*40,240,40)
+
+
     def ch1_near_apart(self):
         for i,stat in enumerate(self.character.stats):
             self.names_labels[i].hide()
@@ -126,16 +174,15 @@ class MainWindow(QMainWindow):
         self.label.setText("")
         self.label.show()
         
-        with open('./data/first_decision.txt', 'r', encoding = "utf-8") as file:
+        with open('./data/chapter1/first_decision.txt', 'r', encoding = "utf-8") as file:
             self.text=file.read()
-            self.print_text(self.label)
-        print(self.text)
-        if self.end_print == 1:
-            with open('./data/first_decision_variants.txt','r',encoding = "utf-8") as file:
-                for i,string in enumerate(file): 
+        self.print_text(self.label,self.choises[0:3], self.first_decision_variant)
+        with open('./data/chapter1/first_decision_variants.txt','r',encoding = "utf-8") as file:
+            for i,string in enumerate(file): 
+                if not (string == '\n'):
                     self.choises[i].setText(string)
-                    self.choises[i].setGeometry(100,200+i*40,240,40)
-                    self.choises[i].show()
+                    self.choises[i].setGeometry(100,400+i*40,240,40)
+
                 
             
             
@@ -152,13 +199,6 @@ class game:
         self.player_choices = {}
 
 
-class progress:
-    def __init__(self):
-        super().init()
-        self.intro_passed = False
-        self.ch1_carpet_key = False
-        self.ch1_lockpick = False
-        self.ch1_UGA_BUGA = False
         
 
 if __name__ == "__main__":
