@@ -14,6 +14,7 @@ class Progress:
         self.ch1_carpet_key = False
         self.ch1_lockpick = False
         self.ch1_UGA_BUGA = False
+        self.ch1_vent = False
         
 
 class Char:
@@ -162,6 +163,29 @@ class MainWindow(QMainWindow):
                     self.choises[i].setText(string)
                     self.choises[i].setGeometry(100,400+i*40,240,40)
 
+            
+    def ch1_in_the_flat(self,i):
+        self.label.setText('')
+        self.hide_buttons(self.choises[0:3])
+        if(i==0):
+            self.progress.ch1_under_bed = True
+            with open('./data/chapter1/hide_under_bed.txt', 'r', encoding = 'utf-8') as file:
+                self.text=file.read()
+        if(i==1):
+            self.progress.ch1_vent = True
+            with open('./data/chapter1/climb_into_vent.txt', 'e', encoding='utf-8') as file:
+                self.text=file.read()
+        if(i==2):
+            with open('./data/chapter1/jump_from_window.txt', 'r', encoding='utf-8') as file:
+                self.text=file.read()
+        if(i==3):
+            self.progress.ch1_stay = True
+            with open('./data/chapter1/stay.txt', 'r', encoding='utf-8') as file:
+                self.text.file.read()
+        
+        # self.print_text(self.label, self.choises)
+        # with open('./data/chapter1/')
+
 
     def ch1_near_apart(self):
         for i,stat in enumerate(self.character.stats):
@@ -184,7 +208,6 @@ class MainWindow(QMainWindow):
                     self.choises[i].setGeometry(100,400+i*40,240,40)
 
                 
-            
             
 
         
