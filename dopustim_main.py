@@ -186,24 +186,33 @@ class MainWindow(QMainWindow):
 
             
     def ch1_in_the_flat(self,i):
+        dex = self.character.stats[list(self.character.stats.keys())[2]]
         path = ''
-        self.label.setText('')
-        self.hide_buttons(self.choises)
+        if (not i==1 or dex > 4):
+            self.label.setText('')
+            self.hide_buttons(self.choises)
         if(i==0):
             self.progress.ch1_under_bed = True
             path ='./data/chapter1/hide_under_bed_variants.txt'
             with open('./data/chapter1/hide_under_bed.txt', 'r', encoding = 'utf-8') as file:
                 self.text=file.read()
+            
         if(i==1):
-            self.progress.ch1_vent = True
-            with open('./data/chapter1/climb_into_vent.txt', 'r', encoding='utf-8') as file:
-                self.text=file.read()
+            
+            if(dex>3):
+                self.progress.ch1_vent = True
+                with open('./data/chapter1/climb_into_vent.txt', 'r', encoding='utf-8') as file:
+                    self.text=file.read()
+                self.print_text(self.label)
+                self.menu_buttons[0].show()
+
         if(i==2):
             self.menu_buttons[0].disconnect()
             self.menu_buttons[0].clicked.connect(lambda _:self.ch1_near_apart(1))
-            self.menu_buttons[0].show()
             with open('./data/chapter1/jump_from_window.txt', 'r', encoding='utf-8') as file:
                 self.text=file.read()
+            self.print_text(self.label)
+            self.menu_buttons[0].show()
         if(i==3):
             path = './data/chapter1/stay_variants.txt'
             self.progress.ch1_stay = True
@@ -216,8 +225,6 @@ class MainWindow(QMainWindow):
                     if not (string == '\n'):
                         self.choises[i].setText(string)
                         self.choises[i].setGeometry(100,400+i*40,240,40)
-        else:
-            self.print_text(self.label)
             
         
 
