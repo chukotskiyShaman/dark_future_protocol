@@ -135,7 +135,28 @@ class MainWindow(QMainWindow):
         self.menu_buttons[0].disconnect()
         self.menu_buttons[0].clicked.connect(self.ch1_near_apart)
 
-    
+
+    def ch1_near_apart(self, restart = 0):
+        if not restart:
+            self.hide_buttons(self.statsbuttons)
+            for i,stat in enumerate(self.character.stats):
+                self.names_labels[i].hide()
+                self.value_labels[i].hide()
+            
+        self.menu_buttons[0].hide()
+        self.label.setText("")
+        self.label.show()
+        
+        with open('./data/chapter1/first_decision.txt', 'r', encoding = "utf-8") as file:
+            self.text=file.read()
+        self.print_text(self.label,self.choises[0:3], self.first_decision_variant)
+        with open('./data/chapter1/first_decision_variants.txt','r',encoding = "utf-8") as file:
+            for i,string in enumerate(file): 
+                if not (string == '\n'):
+                    self.choises[i].setText(string)
+                    self.choises[i].setGeometry(100,400+i*40,240,40)
+
+
     def first_decision_variant(self,i):
         self.label.setText('')
         self.hide_buttons(self.choises[0:3])
@@ -155,7 +176,7 @@ class MainWindow(QMainWindow):
                 self.text=file.read()
 
                 
-        self.print_text(self.label, self.choises)
+        self.print_text(self.label, self.choises, self.ch1_in_the_flat)
         
         with open('./data/chapter1/key_under_carpet_variants.txt', 'r', encoding = 'utf-8') as file:
             for i,string in enumerate(file):
@@ -165,47 +186,50 @@ class MainWindow(QMainWindow):
 
             
     def ch1_in_the_flat(self,i):
-        self.label.setText('')
-        self.hide_buttons(self.choises[0:3])
+        dex = self.character.stats[list(self.character.stats.keys())[2]]
+        path = ''
+        if (not i==1 or dex > 4):
+            self.label.setText('')
+            self.hide_buttons(self.choises)
         if(i==0):
             self.progress.ch1_under_bed = True
+            path ='./data/chapter1/hide_under_bed_variants.txt'
             with open('./data/chapter1/hide_under_bed.txt', 'r', encoding = 'utf-8') as file:
                 self.text=file.read()
+            
         if(i==1):
-            self.progress.ch1_vent = True
-            with open('./data/chapter1/climb_into_vent.txt', 'e', encoding='utf-8') as file:
-                self.text=file.read()
+            
+            if(dex>3):
+                self.progress.ch1_vent = True
+                with open('./data/chapter1/climb_into_vent.txt', 'r', encoding='utf-8') as file:
+                    self.text=file.read()
+                self.print_text(self.label)
+                self.menu_buttons[0].show()
+
         if(i==2):
+            self.menu_buttons[0].disconnect()
+            self.menu_buttons[0].clicked.connect(lambda _:self.ch1_near_apart(1))
             with open('./data/chapter1/jump_from_window.txt', 'r', encoding='utf-8') as file:
                 self.text=file.read()
+            self.print_text(self.label)
+            self.menu_buttons[0].show()
         if(i==3):
+            path = './data/chapter1/stay_variants.txt'
             self.progress.ch1_stay = True
             with open('./data/chapter1/stay.txt', 'r', encoding='utf-8') as file:
                 self.text.file.read()
-        
-        # self.print_text(self.label, self.choises)
-        # with open('./data/chapter1/')
-
-
-    def ch1_near_apart(self):
-        for i,stat in enumerate(self.character.stats):
-            self.names_labels[i].hide()
-            self.value_labels[i].hide()
-            self.statsbuttons[i*2].hide()
-            self.statsbuttons[i*2+1].hide()
+        if not (i==1 or i == 2):
+            self.print_text(self.label, self.choises)
+            with open(path,'r',encoding = "utf-8") as file:
+                for i,string in enumerate(file): 
+                    if not (string == '\n'):
+                        self.choises[i].setText(string)
+                        self.choises[i].setGeometry(100,400+i*40,240,40)
             
-        self.menu_buttons[0].hide()
-        self.label.setText("")
-        self.label.show()
         
-        with open('./data/chapter1/first_decision.txt', 'r', encoding = "utf-8") as file:
-            self.text=file.read()
-        self.print_text(self.label,self.choises[0:3], self.first_decision_variant)
-        with open('./data/chapter1/first_decision_variants.txt','r',encoding = "utf-8") as file:
-            for i,string in enumerate(file): 
-                if not (string == '\n'):
-                    self.choises[i].setText(string)
-                    self.choises[i].setGeometry(100,400+i*40,240,40)
+
+
+  
 
                 
             
