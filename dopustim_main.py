@@ -1,9 +1,24 @@
 import time
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
 from PyQt6 import QtCore
+import pickle
 
 
+def save_game(func, char):
+    with open("saved_games/char_stat.save", 'wb') as file:
+        pickle.dump(char,file)
+    with open("saved_games/saved_game.save", 'wb') as file:
+        pickle.dump(func, file)
+    
 
+
+def load_game():
+    with open("saved_games/char_stat.save", 'rb') as file:
+        char = pickle.load(file)
+    with open("saved_games/saved_game.save", 'rb') as file:
+        func = pickle.load(file)
+
+    return func, char
 
 
 class Progress:
