@@ -6,7 +6,7 @@ import pickle
 
 def save_game(func, char):
     with open("saved_games/char_stat.save", 'wb') as file:
-        pickle.dump(char,file)
+        pickle.dump(char.stats,file)
     with open("saved_games/saved_game.save", 'wb') as file:
         pickle.dump(func, file)
     
@@ -22,14 +22,15 @@ def load_game():
 
 
 class Progress:
-    def __init__(self, parent):
+    def __init__(self):
         super().__init__()
-        self.parent = parent
         self.intro_passed = False
         self.ch1_carpet_key = False
         self.ch1_lockpick = False
         self.ch1_UGA_BUGA = False
         self.ch1_vent = False
+        self.ch1_stay = False
+        self.ch1_under_bad = False
         
 
 class Char:
@@ -52,7 +53,9 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.character=Char(self)
-        self.progress = Progress(self)
+        self.kastil = False
+        self.func = self.quit_button_was_clicked
+        self.progress = Progress()
         self.setWindowTitle("My App")
         self.choises = [QPushButton(self) for _ in range(4)]
         for choise in self.choises:
@@ -76,19 +79,37 @@ class MainWindow(QMainWindow):
 
         self.label.setGeometry(0,0,1900,400)
         self.label.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
-        self.menu_buttons = [QPushButton(self),QPushButton(self),QPushButton(self)]
-        self.menu_buttons[1].hide()
+        self.menu_buttons = [QPushButton(self) for _ in range(4)]
+        self.menu_buttons[2].hide()
+        self.menu_buttons[2].setText("Save game")
+        self.menu_buttons[2].setGeometry(300, 340, 180, 40)
+        self.menu_buttons[2].clicked.connect(self.save_last_game)
         self.menu_buttons[0].setText("Start game")
         self.menu_buttons[0].setGeometry(300, 300, 180, 40)
         self.menu_buttons[0].clicked.connect(self.new_game_button_was_clicked)
-        self.menu_buttons[2].setText("Exit")
-        self.menu_buttons[2].setGeometry(300, 340, 180, 40)
-        self.menu_buttons[2].clicked.connect(self.quit_button_was_clicked)
+        self.menu_buttons[1].setText("Load game")
+        self.menu_buttons[1].setGeometry(300, 340, 180, 40)
+        self.menu_buttons[1].clicked.connect(self.load_last_game)
+        self.menu_buttons[3].setText("Exit")
+        self.menu_buttons[3].setGeometry(300, 380, 180, 40)
+        self.menu_buttons[3].clicked.connect(self.quit_button_was_clicked)
 
+    def save_last_game(self):
+        save_game(self.func, self.character)
+        
+    def load_last_game(self):
+        func, char =  load_game()
+        self.char = char
+        self.menu_buttons[1].hide()
+        self.menu_buttons[0].disconnect()
+        self.menu_buttons[0].setText("Continue")
+        self.menu_buttons[0].clicked.connect(func)
     def new_game_button_was_clicked(self):
         with open('./data/intro.txt', 'r', encoding="utf-8") as file:
             self.text = file.read()# self.text="a"
         self.print_text(self.label)
+        self.menu_buttons[1].hide()
+        self.menu_buttons[2].show()
         # self.menu_buttons[2].hide()
         # self.menu_buttons[0].hide()
         self.menu_buttons[0].disconnect()
@@ -170,11 +191,14 @@ class MainWindow(QMainWindow):
                 if not (string == '\n'):
                     self.choises[i].setText(string)
                     self.choises[i].setGeometry(100,400+i*40,240,40)
+        self.func = self.ch1_near_apart
 
 
     def first_decision_variant(self,i):
-        self.label.setText('')
-        self.hide_buttons(self.choises[0:3])
+        stren = self.character.stats[list(self.character.stats.keys())[0]]
+        if (stren>3 or not i==2):
+            self.label.setText('')
+            self.hide_buttons(self.choises[0:3])
         if (i==0):
             self.progress.ch1_carpet_key = True
             with open('./data/chapter1/key_under_carpet.txt', 'r', encoding = 'utf-8') as file:
@@ -186,24 +210,29 @@ class MainWindow(QMainWindow):
                 self.text=file.read()
                     
         if (i==2):
-            self.progress.ch1_UGA_BUGA = True
-            with open('./data/chapter1/break_door.txt', 'r', encoding = 'utf-8') as file:
-                self.text=file.read()
+            if (stren>3):
+                self.progress.ch1_UGA_BUGA = True
+                with open('./data/chapter1/break_door.txt', 'r', encoding = 'utf-8') as file:
+                    self.text=file.read()
+                self.print_text(self.label)
+                self.menu_buttons[0].show()
 
-                
-        self.print_text(self.label, self.choises, self.ch1_in_the_flat)
-        
-        with open('./data/chapter1/key_under_carpet_variants.txt', 'r', encoding = 'utf-8') as file:
-            for i,string in enumerate(file):
-                if not (string == '\n'):
-                    self.choises[i].setText(string)
-                    self.choises[i].setGeometry(100,400+i*40,240,40)
+        if (not i == 2) or stren>3 :
+            self.print_text(self.label, self.choises, self.ch1_in_the_flat)
+            
+            with open('./data/chapter1/key_under_carpet_variants.txt', 'r', encoding = 'utf-8') as file:
+                for i,string in enumerate(file):
+                    if not (string == '\n'):
+                        self.choises[i].setText(string)
+                        self.choises[i].setGeometry(100,400+i*40,240,40)
+
+        self.func = self.first_decision_variant(i)
 
             
     def ch1_in_the_flat(self,i):
         dex = self.character.stats[list(self.character.stats.keys())[2]]
         path = ''
-        if (not i==1 or dex > 4):
+        if (not i==1 or dex > 3):
             self.label.setText('')
             self.hide_buttons(self.choises)
         if(i==0):
@@ -216,7 +245,7 @@ class MainWindow(QMainWindow):
             
             if(dex>3):
                 self.progress.ch1_vent = True
-                with open('./data/chapter1/climb_into_vent.txt', 'r', encoding='utf-8') as file:
+                with open('./data/chapter2/climb_into_vent.txt', 'r', encoding='utf-8') as file:
                     self.text=file.read()
                 self.print_text(self.label)
                 self.menu_buttons[0].show()
@@ -232,14 +261,57 @@ class MainWindow(QMainWindow):
             path = './data/chapter1/stay_variants.txt'
             self.progress.ch1_stay = True
             with open('./data/chapter1/stay.txt', 'r', encoding='utf-8') as file:
-                self.text.file.read()
-        if not (i==1 or i == 2):
+                self.text = file.read()
+        if not (i==1 or i == 2) or dex>3:
+            self.print_text(self.label, self.choises,self.they_are_here)
+            with open(path,'r',encoding = "utf-8") as file:
+                for i,string in enumerate(file): 
+                    if not (string == '\n'):
+                        self.choises[i].setText(string)
+                        self.choises[i].setGeometry(100,400+i*40,240,40)
+
+        self.func = self.ch1_in_the_flat(i)
+
+    def they_are_here(self, i):
+        path=''
+        self.label.setText('')
+        if self.kastil == False:
+            self.hide_buttons(self.choises)
+        if i == 0:
+            if self.progress.ch1_stay == True:
+                path = './data/chapter2/hands_up_variants.txt'
+                with open('./data/chapter2/hands_up.txt', 'r', encoding='utf-8') as file:
+                    self.text=file.read()
+            else:
+                if(self.kastil==True):
+                    with open('./data/chapter1/stay_under_bad_door_breaked.txt', 'r', encoding='utf-8') as file:
+                        self.text=file.read()
+                elif self.progress.ch1_UGA_BUGA==True:
+                    with open('./data/chapter1/stay_under_bad_door_breaked.txt', 'r', encoding='utf-8') as file:
+                        self.text=file.read()
+                        self.print_text(self.label)
+                        self.menu_buttons[0].disconnect()
+                        self.kastil=True
+                        self.menu_buttons[0].clicked.connect(lambda x: self.they_are_here(0))
+                else:
+                    with open('./data/chapter1/stay_under_bad_door_still.txt', 'r', encoding='utf-8') as file:
+                        self.text=file.read()
+        if i == 3:
+            with open('./data/chapter1/stay_under_bad_door_still.txt', 'r', encoding='utf-8') as file:
+                    self.text=file.read()
+        if (not (self.progress.ch1_UGA_BUGA == True and i==0)) or self.progress.ch1_stay==True:
             self.print_text(self.label, self.choises)
             with open(path,'r',encoding = "utf-8") as file:
                 for i,string in enumerate(file): 
                     if not (string == '\n'):
                         self.choises[i].setText(string)
                         self.choises[i].setGeometry(100,400+i*40,240,40)
+
+        self.func = self.they_are_here(i)
+    
+            
+
+
             
         
 
