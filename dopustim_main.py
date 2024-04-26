@@ -3,7 +3,6 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
 from PyQt6 import QtCore
 import pickle
 
-
 def save_game(func, char):
     game_stat = {
         'func': func,
@@ -82,17 +81,36 @@ class MainWindow(QMainWindow):
         self.menu_buttons = [QPushButton(self) for _ in range(4)]
         self.menu_buttons[2].hide()
         self.menu_buttons[2].setText("Save game")
-        self.menu_buttons[2].setGeometry(300, 340, 180, 40)
+        self.menu_buttons[2].setGeometry(1740, 40, 180, 40)
         self.menu_buttons[2].clicked.connect(self.save_last_game)
         self.menu_buttons[0].setText("Start game")
-        self.menu_buttons[0].setGeometry(300, 300, 180, 40)
+        self.menu_buttons[0].setGeometry(1740, 0, 180, 40)
         self.menu_buttons[0].clicked.connect(self.new_game_button_was_clicked)
         self.menu_buttons[1].setText("Load game")
-        self.menu_buttons[1].setGeometry(300, 340, 180, 40)
+        self.menu_buttons[1].setGeometry(1740, 40, 180, 40)
         self.menu_buttons[1].clicked.connect(self.load_last_game)
         self.menu_buttons[3].setText("Exit")
-        self.menu_buttons[3].setGeometry(300, 380, 180, 40)
+        self.menu_buttons[3].setGeometry(1740, 80, 180, 40)
         self.menu_buttons[3].clicked.connect(self.quit_button_was_clicked)
+        # self.setStyleSheet("""
+        #     QWidget {
+        #         background-color: #333333;
+        #         color: #ffffff;
+        #     }
+        #     QPushButton {
+        #         background-color: #555555;
+        #         color: #ffffff;
+        #         border: none;
+        #         padding: 5px;
+        #     }А
+        #     QPushButton:hover {
+        #         background-color: #666666;
+        #     }
+        #     QLineEdit {
+        #         background-color: #444444;
+        #         color: #ffffff;
+        #     }
+        # """)
 
     def save_last_game(self):
         save_game(self.func, self.character)
@@ -190,7 +208,7 @@ class MainWindow(QMainWindow):
             for i,string in enumerate(file): 
                 if not (string == '\n'):
                     self.choises[i].setText(string)
-                    self.choises[i].setGeometry(100,400+i*40,240,40)
+                    self.choises[i].setGeometry(1680,600+i*40,240,40)
         self.func = self.ch1_near_apart
 
 
@@ -224,7 +242,7 @@ class MainWindow(QMainWindow):
                 for i,string in enumerate(file):
                     if not (string == '\n'):
                         self.choises[i].setText(string)
-                        self.choises[i].setGeometry(100,400+i*40,240,40)
+                        self.choises[i].setGeometry(1680,600+i*40,240,40)
 
         self.func = self.first_decision_variant
 
@@ -269,7 +287,7 @@ class MainWindow(QMainWindow):
                 for i,string in enumerate(file): 
                     if not (string == '\n'):
                         self.choises[i].setText(string)
-                        self.choises[i].setGeometry(100,400+i*40,240,40)
+                        self.choises[i].setGeometry(1680,600+i*40,240,40)
 
         self.func = self.ch1_in_the_flat
 
@@ -306,7 +324,7 @@ class MainWindow(QMainWindow):
                 for i,string in enumerate(file): 
                     if not (string == '\n'):
                         self.choises[i].setText(string)
-                        self.choises[i].setGeometry(100,400+i*40,240,40)
+                        self.choises[i].setGeometry(1680,600+i*40,240,40)
 
         self.func = self.they_are_here
     
