@@ -5,20 +5,20 @@ import pickle
 
 
 def save_game(func, char):
-    with open("saved_games/char_stat.save", 'wb') as file:
-        pickle.dump(char.stats,file)
-    with open("saved_games/saved_game.save", 'wb') as file:
-        pickle.dump(func, file)
+    game_stat = {
+        'func': func,
+        'char': char
+    }
+
+    with open('./saved_games/game_state.save', 'wb') as file:
+        pickle.dump(game_stat, file)
     
 
 
 def load_game():
-    with open("saved_games/char_stat.save", 'rb') as file:
-        char = pickle.load(file)
-    with open("saved_games/saved_game.save", 'rb') as file:
-        func = pickle.load(file)
-
-    return func, char
+    with open('./saved_games/game_state.save', 'rb') as file:
+        game_stat = pickle.load(file)
+    return game_stat['func'], game_stat['char']
 
 
 class Progress:
