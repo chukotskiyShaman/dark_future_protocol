@@ -4,20 +4,20 @@ from PyQt6 import QtCore
 import pickle
 
 def save_game(func, char):
-    with open("saved_games/char_stat.save", 'wb') as file:
-        pickle.dump(char.stats,file)
-    with open("saved_games/saved_game.save", 'wb') as file:
-        pickle.dump(func, file)
+    game_stat = {
+        'func': func,
+        'char': char
+    }
+
+    with open('./saved_games/game_state.save', 'wb') as file:
+        pickle.dump(game_stat, file)
     
 
 
 def load_game():
-    with open("saved_games/char_stat.save", 'rb') as file:
-        char = pickle.load(file)
-    with open("saved_games/saved_game.save", 'rb') as file:
-        func = pickle.load(file)
-
-    return func, char
+    with open('./saved_games/game_state.save', 'rb') as file:
+        game_stat = pickle.load(file)
+    return game_stat['func'], game_stat['char']
 
 
 class Progress:
@@ -244,7 +244,7 @@ class MainWindow(QMainWindow):
                         self.choises[i].setText(string)
                         self.choises[i].setGeometry(1680,600+i*40,240,40)
 
-        self.func = self.first_decision_variant(i)
+        self.func = self.first_decision_variant
 
             
     def ch1_in_the_flat(self,i):
@@ -281,6 +281,7 @@ class MainWindow(QMainWindow):
             with open('./data/chapter1/stay.txt', 'r', encoding='utf-8') as file:
                 self.text = file.read()
         if not (i==1 or i == 2) or dex>3:
+            path = './data/chapter1/stay_variants.txt'
             self.print_text(self.label, self.choises,self.they_are_here)
             with open(path,'r',encoding = "utf-8") as file:
                 for i,string in enumerate(file): 
@@ -288,7 +289,7 @@ class MainWindow(QMainWindow):
                         self.choises[i].setText(string)
                         self.choises[i].setGeometry(1680,600+i*40,240,40)
 
-        self.func = self.ch1_in_the_flat(i)
+        self.func = self.ch1_in_the_flat
 
     def they_are_here(self, i):
         path=''
@@ -325,24 +326,9 @@ class MainWindow(QMainWindow):
                         self.choises[i].setText(string)
                         self.choises[i].setGeometry(1680,600+i*40,240,40)
 
-        self.func = self.they_are_here(i)
+        self.func = self.they_are_here
     
             
-
-
-            
-        
-
-
-  
-
-                
-            
-
-        
-
-        
-
 class game:
     def __init__(self):
         self.app = QApplication([])
