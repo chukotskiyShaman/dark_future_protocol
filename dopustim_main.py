@@ -280,8 +280,7 @@ class MainWindow(QMainWindow):
             self.progress.ch1_stay = True
             with open('./data/chapter1/stay.txt', 'r', encoding='utf-8') as file:
                 self.text = file.read()
-        if not (i==1 or i == 2) or dex>3:
-            path = './data/chapter1/stay_variants.txt'
+        if not (i==1 or i == 2):
             self.print_text(self.label, self.choises,self.they_are_here)
             with open(path,'r',encoding = "utf-8") as file:
                 for i,string in enumerate(file): 
@@ -297,7 +296,8 @@ class MainWindow(QMainWindow):
         if self.kastil == False:
             self.hide_buttons(self.choises)
         if i == 0:
-            if self.progress.ch1_stay == True:
+            if self.progress.ch1_stay == True or self.kastil == True:
+                self.kastil=False
                 path = './data/chapter2/hands_up_variants.txt'
                 with open('./data/chapter2/hands_up.txt', 'r', encoding='utf-8') as file:
                     self.text=file.read()
@@ -318,7 +318,7 @@ class MainWindow(QMainWindow):
         if i == 3:
             with open('./data/chapter1/stay_under_bad_door_still.txt', 'r', encoding='utf-8') as file:
                     self.text=file.read()
-        if (not (self.progress.ch1_UGA_BUGA == True and i==0)) or self.progress.ch1_stay==True:
+        if (not (self.progress.ch1_UGA_BUGA == True and i==0)) or self.progress.ch1_stay==True or self.kastil==False:
             self.print_text(self.label, self.choises)
             with open(path,'r',encoding = "utf-8") as file:
                 for i,string in enumerate(file): 
