@@ -226,7 +226,7 @@ class MainWindow(QMainWindow):
                         self.choises[i].setText(string)
                         self.choises[i].setGeometry(100,400+i*40,240,40)
 
-        self.func = self.first_decision_variant(i)
+        self.func = self.first_decision_variant
 
             
     def ch1_in_the_flat(self,i):
@@ -263,6 +263,7 @@ class MainWindow(QMainWindow):
             with open('./data/chapter1/stay.txt', 'r', encoding='utf-8') as file:
                 self.text = file.read()
         if not (i==1 or i == 2) or dex>3:
+            path = './data/chapter1/stay_variants.txt'
             self.print_text(self.label, self.choises,self.they_are_here)
             with open(path,'r',encoding = "utf-8") as file:
                 for i,string in enumerate(file): 
@@ -270,7 +271,7 @@ class MainWindow(QMainWindow):
                         self.choises[i].setText(string)
                         self.choises[i].setGeometry(100,400+i*40,240,40)
 
-        self.func = self.ch1_in_the_flat(i)
+        self.func = self.ch1_in_the_flat
 
     def they_are_here(self, i):
         path=''
@@ -307,24 +308,9 @@ class MainWindow(QMainWindow):
                         self.choises[i].setText(string)
                         self.choises[i].setGeometry(100,400+i*40,240,40)
 
-        self.func = self.they_are_here(i)
+        self.func = self.they_are_here
     
             
-
-
-            
-        
-
-
-  
-
-                
-            
-
-        
-
-        
-
 class game:
     def __init__(self):
         self.app = QApplication([])
