@@ -209,7 +209,7 @@ class MainWindow(QMainWindow):
                 if not (string == '\n'):
                     self.choises[i].setText(string)
                     self.choises[i].setGeometry(1680,600+i*40,240,40)
-        self.func = self.ch1_near_apart
+        self.func = self.ch1_near_apart(i)
 
 
     def first_decision_variant(self,i):
@@ -244,7 +244,7 @@ class MainWindow(QMainWindow):
                         self.choises[i].setText(string)
                         self.choises[i].setGeometry(1680,600+i*40,240,40)
 
-        self.func = self.first_decision_variant
+        self.func = self.first_decision_variant(i)
 
             
     def ch1_in_the_flat(self,i):
@@ -289,7 +289,7 @@ class MainWindow(QMainWindow):
                         self.choises[i].setText(string)
                         self.choises[i].setGeometry(1680,600+i*40,240,40)
 
-        self.func = self.ch1_in_the_flat
+        self.func = self.ch1_in_the_flat(i)
 
     def they_are_here(self, i):
         path=''
@@ -326,7 +326,7 @@ class MainWindow(QMainWindow):
                         self.choises[i].setText(string)
                         self.choises[i].setGeometry(1680,600+i*40,240,40)
 
-        self.func = self.they_are_here
+        self.func = self.they_are_here(i)
     
             
 class game:
