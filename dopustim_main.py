@@ -209,7 +209,7 @@ class MainWindow(QMainWindow):
                 if not (string == '\n'):
                     self.choises[i].setText(string)
                     self.choises[i].setGeometry(1680,600+i*40,240,40)
-        self.func = self.ch1_near_apart(i)
+        self.func = self.ch1_near_apart
 
 
     def first_decision_variant(self,i):
@@ -244,7 +244,7 @@ class MainWindow(QMainWindow):
                         self.choises[i].setText(string)
                         self.choises[i].setGeometry(1680,600+i*40,240,40)
 
-        self.func = self.first_decision_variant(i)
+        self.func = self.first_decision_variant
 
             
     def ch1_in_the_flat(self,i):
@@ -254,7 +254,7 @@ class MainWindow(QMainWindow):
             self.label.setText('')
             self.hide_buttons(self.choises)
         if(i==0):
-            self.progress.ch1_under_bed = True
+            self.progress.ch1_under_bad = True
             path ='./data/chapter1/hide_under_bed_variants.txt'
             with open('./data/chapter1/hide_under_bed.txt', 'r', encoding = 'utf-8') as file:
                 self.text=file.read()
@@ -267,6 +267,8 @@ class MainWindow(QMainWindow):
                     self.text=file.read()
                 self.print_text(self.label)
                 self.menu_buttons[0].show()
+                self.menu_buttons[0].clicked.disconnect()
+                self.menu_buttons[0].clicked.connect(lambda x: self.ne_poyman())
 
         if(i==2):
             self.menu_buttons[0].disconnect()
@@ -281,20 +283,26 @@ class MainWindow(QMainWindow):
             with open('./data/chapter1/stay.txt', 'r', encoding='utf-8') as file:
                 self.text = file.read()
         if not (i==1 or i == 2):
-            self.print_text(self.label, self.choises,self.they_are_here)
+            if i==0:
+                self.print_text(self.label, self.choises[0:3],self.they_are_here)
+            else:
+                self.print_text(self.label, self.choises,self.they_are_here)
             with open(path,'r',encoding = "utf-8") as file:
                 for i,string in enumerate(file): 
                     if not (string == '\n'):
                         self.choises[i].setText(string)
                         self.choises[i].setGeometry(1680,600+i*40,240,40)
 
-        self.func = self.ch1_in_the_flat(i)
+        self.func = self.ch1_in_the_flat
 
     def they_are_here(self, i):
         path=''
         self.label.setText('')
         if self.kastil == False:
-            self.hide_buttons(self.choises)
+            if self.progress.ch1_under_bad:
+                self.hide_buttons(self.choises[0:3])
+            else:
+                self.hide_buttons(self.choises)
         if i == 0:
             if self.progress.ch1_stay == True or self.kastil == True:
                 self.kastil=False
@@ -313,21 +321,44 @@ class MainWindow(QMainWindow):
                         self.kastil=True
                         self.menu_buttons[0].clicked.connect(lambda x: self.they_are_here(0))
                 else:
+                    print(1)
                     with open('./data/chapter1/stay_under_bad_door_still.txt', 'r', encoding='utf-8') as file:
                         self.text=file.read()
+                        self.print_text(self.label)
+                        self.menu_buttons[0].clicked.disconnect()
+                        self.menu_buttons[0].clicked.connect(lambda x: self.ne_poyman())
+                        self.menu_buttons[0].show()
         if i == 3:
             with open('./data/chapter1/stay_under_bad_door_still.txt', 'r', encoding='utf-8') as file:
                     self.text=file.read()
-        if (not (self.progress.ch1_UGA_BUGA == True and i==0)) or self.progress.ch1_stay==True or self.kastil==False:
+        if (not (i==0)) or self.progress.ch1_stay==True or (self.kastil and self.progress.ch1_UGA_BUGA):
             self.print_text(self.label, self.choises)
+            
             with open(path,'r',encoding = "utf-8") as file:
                 for i,string in enumerate(file): 
                     if not (string == '\n'):
                         self.choises[i].setText(string)
                         self.choises[i].setGeometry(1680,600+i*40,240,40)
 
-        self.func = self.they_are_here(i)
-    
+        self.func = self.they_are_here
+
+    def we_are_fucked_up(self,i):
+        path = 'rip_the_ropes_variants.txt'
+        self.label.setText('')
+        
+    def ne_poyman(self):
+        self.label.setText('')
+        with open('./data/chapter2/follow_the_instructions.txt', 'r', encoding='utf-8') as file:
+            self.text=file.read()
+        self.print_text(self.label,self.choises[0:2], self.kogo_ty_viberesh)
+        with open('./data/chapter2/follow_the_instructions_variants.txt','r',encoding = "utf-8") as file:
+            for i,string in enumerate(file): 
+                if not (string == '\n'):
+                    self.choises[i].setText(string)
+                    self.choises[i].setGeometry(1680,600+i*40,240,40)
+
+    def kogo_ty_viberesh(self,i):
+        a= i
             
 class game:
     def __init__(self):
