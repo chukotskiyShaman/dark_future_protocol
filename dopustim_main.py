@@ -510,15 +510,26 @@ class MainWindow(QMainWindow):
                 
     def opposition(self, i):
         path=''
-        self.hide_buttons(self.choises[0:2])
+        if not i == 2:
+            self.hide_buttons(self.choises[0:2])
         self.label.setText('')
 
         if i == 0:
-            path = './data/chapter2/allow_variants.txt'
+            self.menu_buttons[0].disconnect()
+            self.menu_buttons[0].clicked.connect(lambda _:self.opposition(2))
             with open('./data/chapter2/allow.txt', 'r', encoding='utf-8') as file:
                 self.text=file.read()
+            self.print_text(self.label)
+            self.menu_buttons[0].show()
+            return
 
-        else:
+        if i ==2:
+            with open('./data/chapter2/help_partisans.txt', 'r', encoding='utf-8') as file:
+                self.text=file.read()
+            self.print_text(self.label)
+            return
+        
+        if i == 1:
             path = './data/chapter2/decline_variants.txt'
             with open('./data/chapter2/decline.txt', 'r', encoding='utf-8') as file:
                 self.text=file.read()
