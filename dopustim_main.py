@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
             stats.hide()
             vals.hide()
 
-        self.label.setGeometry(0,0,1900,400)
+        self.label.setGeometry(0,0,1500,750)
         self.label.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
         self.menu_buttons = [QPushButton(self) for _ in range(4)]
         self.menu_buttons[2].hide()
@@ -92,25 +92,38 @@ class MainWindow(QMainWindow):
         self.menu_buttons[3].setText("Exit")
         self.menu_buttons[3].setGeometry(1740, 80, 180, 40)
         self.menu_buttons[3].clicked.connect(self.quit_button_was_clicked)
-        # self.setStyleSheet("""
-        #     QWidget {
-        #         background-color: #333333;
-        #         color: #ffffff;
-        #     }
-        #     QPushButton {
-        #         background-color: #555555;
-        #         color: #ffffff;
-        #         border: none;
-        #         padding: 5px;
-        #     }А
-        #     QPushButton:hover {
-        #         background-color: #666666;
-        #     }
-        #     QLineEdit {
-        #         background-color: #444444;
-        #         color: #ffffff;
-        #     }
-        # """)
+        self.setStyleSheet("""
+            QPushButton {
+                background-color: rgba(0,0,0,0.5);
+                color: white;
+                border: none;
+                text-align: center;
+                text-decoration: none;
+                margin: 4px 2px;
+            }
+            QWidget{
+                font-size: 20px;}
+                
+            
+            QLabel {
+                background-color: rgba(0,0,0,0.5);
+                color: white;
+                border: none;
+                text-align: center;
+                text-decoration: none;
+                margin: 4px 2px;
+            }
+            
+            QMainWindow {
+                background-color: #f2f2f2;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                padding: 5px;
+                background-image: url('index2.jpg');
+            }
+            
+            
+        """)
 
     def save_last_game(self):
         save_game(self.func, self.character)
@@ -157,7 +170,7 @@ class MainWindow(QMainWindow):
     def print_text(self, label, buttons = [], func = lambda x:x):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(lambda : self.updateText(label, buttons, func))
-        self.timer.start(0)
+        self.timer.start(15)
         
     def player_char(self):
         self.label.hide()
@@ -176,10 +189,10 @@ class MainWindow(QMainWindow):
             self.names_labels[i].setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
             self.value_labels[i].setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
 
-            self.names_labels[i].setGeometry(0,100+i*20,100,20)
-            self.value_labels[i].setGeometry(120,100+i*20,20,20)    
-            self.statsbuttons[i*2].setGeometry(100,100+i*20,20,20)
-            self.statsbuttons[i*2+1].setGeometry(140, 100+i*20,20,20)
+            self.names_labels[i].setGeometry(0,100+i*40,120,40)
+            self.value_labels[i].setGeometry(145,100+i*40,35,40)    
+            self.statsbuttons[i*2].setGeometry(120,100+i*40,25,40)
+            self.statsbuttons[i*2+1].setGeometry(180, 100+i*40,25,40)
 
             self.names_labels[i].show()
             self.value_labels[i].show()
@@ -208,7 +221,7 @@ class MainWindow(QMainWindow):
             for i,string in enumerate(file): 
                 if not (string == '\n'):
                     self.choises[i].setText(string)
-                    self.choises[i].setGeometry(1470,600+i*40,450,40)
+                    self.choises[i].setGeometry(735,750+i*50,650,50)
         self.func = self.ch1_near_apart
 
 
@@ -241,7 +254,7 @@ class MainWindow(QMainWindow):
                 for i,string in enumerate(file):
                     if not (string == '\n'):
                         self.choises[i].setText(string)
-                        self.choises[i].setGeometry(1470,600+i*40,450,40)
+                        self.choises[i].setGeometry(735,750+i*50,650,50)
 
         self.func = self.first_decision_variant
 
@@ -265,6 +278,8 @@ class MainWindow(QMainWindow):
                 self.progress.ch1_vent = True
                 with open('./data/chapter2/climb_into_vent.txt', 'r', encoding='utf-8') as file:
                     self.text=file.read()
+            else:
+                return
 
         if(i==2):
             self.menu_buttons[0].disconnect()
@@ -289,7 +304,7 @@ class MainWindow(QMainWindow):
                 for i,string in enumerate(file): 
                     if not (string == '\n'):
                         self.choises[i].setText(string)
-                        self.choises[i].setGeometry(1470,600+i*40,450,40)
+                        self.choises[i].setGeometry(735,750+i*50,650,50)
 
         self.func = self.ch1_in_the_flat
 
@@ -335,7 +350,7 @@ class MainWindow(QMainWindow):
                             for i,string in enumerate(file):
                                 if not (string == '\n'):
                                     self.choises[i].setText(string)
-                                    self.choises[i].setGeometry(1470,600+i*40,450,40)
+                                    self.choises[i].setGeometry(735,750+i*50,650,50)
                         return
 
 
@@ -399,7 +414,7 @@ class MainWindow(QMainWindow):
                 for i,string in enumerate(file):
                     if not (string == '\n'):
                         self.choises[i].setText(string)
-                        self.choises[i].setGeometry(1470,600+i*40,450,40)
+                        self.choises[i].setGeometry(735,750+i*50,650,50)
 
         self.func = self.they_are_here
 
@@ -434,7 +449,7 @@ class MainWindow(QMainWindow):
             for i,string in enumerate(file): 
                 if not (string == '\n'):
                     self.choises[i].setText(string)
-                    self.choises[i].setGeometry(1470,600+i*40,450,40)
+                    self.choises[i].setGeometry(735,750+i*50,650,50)
 
     def saved_by_god(self,i):
         stren = self.character.stats[list(self.character.stats.keys())[0]]
@@ -490,7 +505,7 @@ class MainWindow(QMainWindow):
             for i,string in enumerate(file): 
                 if not (string == '\n'):
                     self.choises[i].setText(string)
-                    self.choises[i].setGeometry(1470,600+i*40,450,40)
+                    self.choises[i].setGeometry(735,750+i*50,650,50)
 
     def police(self,i):
         path=''
@@ -549,7 +564,7 @@ class MainWindow(QMainWindow):
             for i,string in enumerate(file): 
                 if not (string == '\n'):
                     self.choises[i].setText(string)
-                    self.choises[i].setGeometry(1470,600+i*40,450,40)
+                    self.choises[i].setGeometry(735,750+i*50,650,50)
 
     def attack(self,i):
         path=''
@@ -571,7 +586,7 @@ class MainWindow(QMainWindow):
             for i,string in enumerate(file): 
                 if not (string == '\n'):
                     self.choises[i].setText(string)
-                    self.choises[i].setGeometry(1470,600+i*40,450,40)
+                    self.choises[i].setGeometry(735,750+i*50,650,50)
 
     def day(self,i):
         return
@@ -612,7 +627,7 @@ class MainWindow(QMainWindow):
             for i,string in enumerate(file): 
                 if not (string == '\n'):
                     self.choises[i].setText(string)
-                    self.choises[i].setGeometry(1470,600+i*40,450,40)
+                    self.choises[i].setGeometry(735,750+i*50,650,50)
 
 
 class game:
