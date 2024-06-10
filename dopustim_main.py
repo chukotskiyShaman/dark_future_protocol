@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
             stats.hide()
             vals.hide()
 
-        self.label.setGeometry(0,0,1500,750)
+        self.label.setGeometry(0,0,1700,800)
         self.label.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
         self.menu_buttons = [QPushButton(self) for _ in range(4)]
         self.menu_buttons[2].hide()
@@ -170,7 +170,7 @@ class MainWindow(QMainWindow):
     def print_text(self, label, buttons = [], func = lambda x:x):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(lambda : self.updateText(label, buttons, func))
-        self.timer.start(15)
+        self.timer.start(0)
         
     def player_char(self):
         self.label.hide()
@@ -221,7 +221,7 @@ class MainWindow(QMainWindow):
             for i,string in enumerate(file): 
                 if not (string == '\n'):
                     self.choises[i].setText(string)
-                    self.choises[i].setGeometry(735,750+i*50,650,50)
+                    self.choises[i].setGeometry(735,800+i*50,650,50)
         self.func = self.ch1_near_apart
 
 
@@ -254,7 +254,7 @@ class MainWindow(QMainWindow):
                 for i,string in enumerate(file):
                     if not (string == '\n'):
                         self.choises[i].setText(string)
-                        self.choises[i].setGeometry(735,750+i*50,650,50)
+                        self.choises[i].setGeometry(735,800+i*50,650,50)
 
         self.func = self.first_decision_variant
 
@@ -304,7 +304,7 @@ class MainWindow(QMainWindow):
                 for i,string in enumerate(file): 
                     if not (string == '\n'):
                         self.choises[i].setText(string)
-                        self.choises[i].setGeometry(735,750+i*50,650,50)
+                        self.choises[i].setGeometry(735,800+i*50,650,50)
 
         self.func = self.ch1_in_the_flat
 
@@ -350,7 +350,7 @@ class MainWindow(QMainWindow):
                             for i,string in enumerate(file):
                                 if not (string == '\n'):
                                     self.choises[i].setText(string)
-                                    self.choises[i].setGeometry(735,750+i*50,650,50)
+                                    self.choises[i].setGeometry(735,800+i*50,650,50)
                         return
 
 
@@ -414,7 +414,7 @@ class MainWindow(QMainWindow):
                 for i,string in enumerate(file):
                     if not (string == '\n'):
                         self.choises[i].setText(string)
-                        self.choises[i].setGeometry(735,750+i*50,650,50)
+                        self.choises[i].setGeometry(735,800+i*50,650,50)
 
         self.func = self.they_are_here
 
@@ -449,7 +449,7 @@ class MainWindow(QMainWindow):
             for i,string in enumerate(file): 
                 if not (string == '\n'):
                     self.choises[i].setText(string)
-                    self.choises[i].setGeometry(735,750+i*50,650,50)
+                    self.choises[i].setGeometry(735,800+i*50,650,50)
 
     def saved_by_god(self,i):
         stren = self.character.stats[list(self.character.stats.keys())[0]]
@@ -505,7 +505,7 @@ class MainWindow(QMainWindow):
             for i,string in enumerate(file): 
                 if not (string == '\n'):
                     self.choises[i].setText(string)
-                    self.choises[i].setGeometry(735,750+i*50,650,50)
+                    self.choises[i].setGeometry(735,800+i*50,650,50)
 
     def police(self,i):
         path=''
@@ -513,6 +513,12 @@ class MainWindow(QMainWindow):
         self.label.setText('')
 
         if i == 0:
+            self.menu_buttons[0].disconnect()
+            self.menu_buttons[0].clicked.connect(lambda _:self.ch1_near_apart(1))
+            with open('./data/chapter2/with_partisans.txt', 'r', encoding='utf-8') as file:
+                self.text=file.read()
+            self.print_text(self.label)
+            self.menu_buttons[0].show()
             return
         else:
             self.menu_buttons[0].disconnect()
@@ -564,44 +570,117 @@ class MainWindow(QMainWindow):
             for i,string in enumerate(file): 
                 if not (string == '\n'):
                     self.choises[i].setText(string)
-                    self.choises[i].setGeometry(735,750+i*50,650,50)
+                    self.choises[i].setGeometry(735,800+i*50,650,50)
 
     def attack(self,i):
+        self.kastil=False
         path=''
         self.hide_buttons(self.choises[0:2])
+        self.menu_buttons[0].disconnect()
+        self.menu_buttons[0].hide()
         self.label.setText('')
         if i == 0:
             path = './data/chapter3/daylight_variants.txt'
             with open('./data/chapter3/daylight.txt', 'r', encoding='utf-8') as file:
                 self.text=file.read()
-        self.print_text(self.label,self.choises[0:2], self.day)
+            self.print_text(self.label,self.choises[0:2], self.day)
 
         if i == 1:
             path = './data/chapter3/stels_variants.txt'
             with open('./data/chapter3/stels.txt', 'r', encoding='utf-8') as file:
                 self.text=file.read()
-        self.print_text(self.label,self.choises[0:2], self.night)
+            self.print_text(self.label,self.choises[0:2], self.night)
 
         with open(path,'r',encoding = "utf-8") as file:
             for i,string in enumerate(file): 
                 if not (string == '\n'):
                     self.choises[i].setText(string)
-                    self.choises[i].setGeometry(735,750+i*50,650,50)
+                    self.choises[i].setGeometry(735,800+i*50,650,50)
 
     def day(self,i):
-        return
+        path=''
+        if not self.kastil:
+            self.hide_buttons(self.choises[0:2])
+        else:
+            self.menu_buttons[0].hide()
+        self.label.setText('')
+        if i ==0:
+            path = './data/chapter3/use_device_variants.txt'
+            with open('./data/chapter3/use_device.txt', 'r', encoding='utf-8') as file:
+                self.text=file.read()
+
+        if i == 1:
+            with open('./data/chapter3/the_assault.txt', 'r', encoding='utf-8') as file:
+                self.text=file.read()
+            self.print_text(self.label)
+            return
+        
+        self.print_text(self.label,self.choises[0:2], self.crysis)
+        with open(path,'r',encoding = "utf-8") as file:
+            for i,string in enumerate(file): 
+                if not (string == '\n'):
+                    self.choises[i].setText(string)
+                    self.choises[i].setGeometry(735,800+i*50,650,50)
+        self.kastil=False
     
+
+    def crysis(self,i):
+        path=''
+        if not self.kastil:
+            self.hide_buttons(self.choises[0:2])
+            self.menu_buttons[0].hide()
+            self.menu_buttons[0].disconnect()
+        self.label.setText('')
+        if i==0:
+            path = './data/chapter3/to_the_machine_variants.txt'
+            with open('./data/chapter3/to_the_machine.txt', 'r', encoding='utf-8') as file:
+                self.text=file.read()
+            
+        if i==1:
+            self.menu_buttons[0].clicked.connect(lambda _:self.crysis(0))
+            with open('./data/chapter3/to_the_conference_room.txt', 'r', encoding='utf-8') as file:
+                self.text=file.read()
+            self.print_text(self.label)
+            self.menu_buttons[0].show()
+            self.kastil=True
+            return
+        
+        self.print_text(self.label,self.choises[0:2], self.end)
+        with open(path,'r',encoding = "utf-8") as file:
+            for i,string in enumerate(file): 
+                if not (string == '\n'):
+                    self.choises[i].setText(string)
+                    self.choises[i].setGeometry(735,800+i*50,650,50)
+
+    def end(self,i):
+        self.menu_buttons[0].hide()
+        self.menu_buttons[0].disconnect()
+        self.hide_buttons(self.choises[0:2])
+        self.label.setText('')
+        if i ==0:
+            with open('./data/chapter3/break_by_terminal.txt', 'r', encoding='utf-8') as file:
+                self.text=file.read()
+        if i == 1:
+            with open('./data/chapter3/use_valves.txt', 'r', encoding='utf-8') as file:
+                self.text=file.read()
+        self.print_text(self.label)
+
     def night(self,i):
         path=''
         self.hide_buttons(self.choises[0:2])
         self.label.setText('')
         if i ==0:
+            self.menu_buttons[0].clicked.connect(lambda _:self.day(0))
             with open('./data/chapter3/look_around.txt', 'r', encoding='utf-8') as file:
                 self.text=file.read()
+
         if i == 1:
+            self.menu_buttons[0].clicked.connect(lambda _:self.day(1))
             with open('./data/chapter3/use_terminal_stels.txt', 'r', encoding='utf-8') as file:
                 self.text=file.read()
         self.print_text(self.label)
+        self.menu_buttons[0].show()
+        self.kastil=True
 
 
     def decline(self,i):
@@ -627,7 +706,7 @@ class MainWindow(QMainWindow):
             for i,string in enumerate(file): 
                 if not (string == '\n'):
                     self.choises[i].setText(string)
-                    self.choises[i].setGeometry(735,750+i*50,650,50)
+                    self.choises[i].setGeometry(735,800+i*50,650,50)
 
 
 class game:
