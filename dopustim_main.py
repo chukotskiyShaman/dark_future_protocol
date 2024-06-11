@@ -169,7 +169,7 @@ class MainWindow(QMainWindow):
     def print_text(self, label, buttons = [], func = lambda x:x):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(lambda : self.updateText(label, buttons, func))
-        self.timer.start(0)
+        self.timer.start(25)
         
     def player_char(self):
         self.label.hide()
