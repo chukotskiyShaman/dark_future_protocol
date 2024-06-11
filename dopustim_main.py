@@ -2,7 +2,7 @@ import time
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
 from PyQt6 import QtCore
 import pickle
-
+#Функция сохранения игры, которая, видимо, никогда не увидит свет
 def save_game(func, char):
     game_stat = {
         'func': func,
@@ -13,12 +13,13 @@ def save_game(func, char):
         pickle.dump(game_stat, file)
     
 
-
+#Загрузка из той же оперы
 def load_game():
     with open('./saved_games/game_state.save', 'rb') as file:
         game_stat = pickle.load(file)
     return game_stat['func'], game_stat['char']
 
+#Класс в котором сохраняются ключевые действия игрока для динамического переключения контекста
 class Progress:
     def __init__(self):
         super().__init__()
@@ -30,7 +31,7 @@ class Progress:
         self.ch1_stay = False
         self.ch1_under_bad = False
         
-
+#Класс с характеристиками персонажа
 class Char:
     def __init__(self,parent):
         super().__init__()
@@ -46,7 +47,9 @@ class Char:
             self.parent.menu_buttons[0].show()
         else:
             self.parent.menu_buttons[0].hide()
-         
+
+
+#Основное окно программы         
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -65,6 +68,7 @@ class MainWindow(QMainWindow):
         self.value_labels = [QLabel(self) for _ in range(len(self.character.stats))]
         self.statsbuttons = [QPushButton(self) for _ in range(len(self.character.stats)*2)]
 
+        #Блок кнопок для настройки характеристик персонажа
         for i in range(10):
             if (i%2==0):
                 self.statsbuttons[i].setText("-")
@@ -74,7 +78,7 @@ class MainWindow(QMainWindow):
         for stats,vals in zip(self.names_labels,self.value_labels):
             stats.hide()
             vals.hide()
-
+        #инициализация основных кнопок окна
         self.label.setGeometry(0,0,1700,800)
         self.label.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
         self.menu_buttons = [QPushButton(self) for _ in range(4)]
@@ -91,6 +95,7 @@ class MainWindow(QMainWindow):
         self.menu_buttons[3].setText("Exit")
         self.menu_buttons[3].setGeometry(1740, 80, 180, 40)
         self.menu_buttons[3].clicked.connect(self.quit_button_was_clicked)
+        #Верстка внешнего вида окна
         self.setStyleSheet("""
             QPushButton {
                 background-color: rgba(0,0,0,0.5);
@@ -134,6 +139,7 @@ class MainWindow(QMainWindow):
         self.menu_buttons[0].disconnect()
         self.menu_buttons[0].setText("Continue")
         self.menu_buttons[0].clicked.connect(func)
+    #Запуск новой игры
     def new_game_button_was_clicked(self):
         with open('./data/intro.txt', 'r', encoding="utf-8") as file:
             self.text = file.read()# self.text="a"
@@ -145,12 +151,12 @@ class MainWindow(QMainWindow):
         self.menu_buttons[0].disconnect()
         self.menu_buttons[0].setText("Continue")
         self.menu_buttons[0].clicked.connect(self.player_char)
-
+    #Выход из игры и полное закрытие программы
     def quit_button_was_clicked(self):
         game.app.quit()
 
 
-    
+    #Обновление текста в основном текстовом окне
     def updateText(self, label, buttons = 0, func=0):
         if self.text:
             label.setText(label.text() + self.text[0])
@@ -160,17 +166,17 @@ class MainWindow(QMainWindow):
                 button.clicked.connect(lambda _, x = i : func(x))
                 button.show()
             self.timer.stop()
-            
+    #Скрытие кнопок выбора действия       
     def hide_buttons(self, buttons):
         for button in buttons:
             button.hide()
             button.disconnect()
-            
+    #Бегущая строка текста в основном окне
     def print_text(self, label, buttons = [], func = lambda x:x):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(lambda : self.updateText(label, buttons, func))
         self.timer.start(25)
-        
+    #Настройка характеристик персонажа    
     def player_char(self):
         self.label.hide()
         self.timer.stop()
@@ -201,7 +207,9 @@ class MainWindow(QMainWindow):
         self.menu_buttons[0].disconnect()
         self.menu_buttons[0].clicked.connect(self.ch1_near_apart)
 
-
+######################################################## Основной блок игры ############################################################
+#Здесь происходит основная часть переключения контекста текстов, в зависимости от действий игрока, и строится линия сюжета
+#Каждая функция представляет собой отдельный эпизод с места действия, каждый выбор игрока ведет к функции соответствующей выбору
     def ch1_near_apart(self, restart = 0):
         if not restart:
             self.hide_buttons(self.statsbuttons)
@@ -703,6 +711,7 @@ class MainWindow(QMainWindow):
                 if not (string == '\n'):
                     self.choises[i].setText(string)
                     self.choises[i].setGeometry(735,800+i*50,650,50)
+#####################################################################################################################
 
 
 class game:
