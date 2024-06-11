@@ -5,7 +5,7 @@ a = Analysis(
     ['dopustim_main.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('data', '.'), ('index2.jpg', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
