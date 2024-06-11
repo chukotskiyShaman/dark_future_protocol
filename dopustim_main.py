@@ -19,7 +19,6 @@ def load_game():
         game_stat = pickle.load(file)
     return game_stat['func'], game_stat['char']
 
-
 class Progress:
     def __init__(self):
         super().__init__()
@@ -55,7 +54,7 @@ class MainWindow(QMainWindow):
         self.kastil = False
         self.func = self.quit_button_was_clicked
         self.progress = Progress()
-        self.setWindowTitle("My App")
+        self.setWindowTitle("Dark Future Protocol")
         self.choises = [QPushButton(self) for _ in range(4)]
         for choise in self.choises:
             choise.hide()
@@ -170,7 +169,7 @@ class MainWindow(QMainWindow):
     def print_text(self, label, buttons = [], func = lambda x:x):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(lambda : self.updateText(label, buttons, func))
-        self.timer.start(0)
+        self.timer.start(25)
         
     def player_char(self):
         self.label.hide()
@@ -422,10 +421,7 @@ class MainWindow(QMainWindow):
         stren = self.character.stats[list(self.character.stats.keys())[0]]
         dex =  self.character.stats[list(self.character.stats.keys())[2]]
         if not ((i==0 and stren <8) or (i==1 and dex <8)):
-            # if self.progress.ch1_under_bad == True:
             self.hide_buttons(self.choises[0:3])
-            # else:
-            #     self.hide_buttons(self.choises)
             self.label.setText('')
         path = './data/chapter2/rip_the_ropes_variants.txt'
         if i == 0:
@@ -455,11 +451,8 @@ class MainWindow(QMainWindow):
         stren = self.character.stats[list(self.character.stats.keys())[0]]
         tech =  self.character.stats[list(self.character.stats.keys())[1]]
         if not ((i==0 and stren <8) or (i==2 and tech <8)):
-            # if self.progress.ch1_under_bad == True:
             if not i ==3:
                 self.hide_buttons(self.choises[0:3])
-            # else:
-            #     self.hide_buttons(self.choises)
             self.label.setText('')
         with open('./data/chapter2/saved_by_someone.txt', 'r', encoding='utf-8') as file:
             self.text=file.read()
@@ -598,6 +591,7 @@ class MainWindow(QMainWindow):
                     self.choises[i].setGeometry(735,800+i*50,650,50)
 
     def day(self,i):
+        self.menu_buttons[0].clicked.connect(lambda _:self.ch1_near_apart(1))
         path=''
         if not self.kastil:
             self.hide_buttons(self.choises[0:2])
@@ -625,6 +619,7 @@ class MainWindow(QMainWindow):
     
 
     def crysis(self,i):
+        self.menu_buttons[0].clicked.connect(lambda _:self.ch1_near_apart(1))
         path=''
         if not self.kastil:
             self.hide_buttons(self.choises[0:2])
@@ -653,6 +648,7 @@ class MainWindow(QMainWindow):
                     self.choises[i].setGeometry(735,800+i*50,650,50)
 
     def end(self,i):
+        self.menu_buttons[0].clicked.connect(lambda _:self.ch1_near_apart(1))
         self.menu_buttons[0].hide()
         self.menu_buttons[0].disconnect()
         self.hide_buttons(self.choises[0:2])
