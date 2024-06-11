@@ -156,7 +156,7 @@ class MainWindow(QMainWindow):
         game.app.quit()
 
 
-    #Обновление текста в основном текстовом окне
+    #Печатает текст в основном окне и по завершении выводит кнопки с выбором действия
     def updateText(self, label, buttons = 0, func=0):
         if self.text:
             label.setText(label.text() + self.text[0])
